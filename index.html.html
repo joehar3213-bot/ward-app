@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleMate - Your Personal AI Stylist</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a8a4e6;
+            --accent: #fd79a8;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --text: #2d3436;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+        }
+
+        .header h1 .logo-icon {
+            font-size: 1.3em;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header-subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Navigation Styles */
+        .nav-tabs {
+            display: flex;
+            background: #ffffff;
+            padding: 10px 20px 0;
+            gap: 5px;
+            overflow-x: auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-tab {
+            padding: 15px 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #636e72;
+            border-radius: 10px 10px 0 0;
+            transition: var(--transition);
+            white-space: nowrap;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab:hover {
+            background: #f0f0f0;
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: var(--bg);
+            color: var(--primary);
+            box-shadow: 0 -3px 10px rgba(108, 92, 231, 0.1);
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            right: 25%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .nav-tab .tab-icon {
+            font-size: 1.2em;
+        }
+
+        /* Content Styles */
+        .content {
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        h2 {
+            color: var(--text);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        h3 {
+            color: var(--text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        /* Upload Section Styles */
+        .upload-section {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .upload-category {
+            border: 2px dashed #cbd5e0;
+            border-radius: var(--radius);
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            background: #fafafa;
+        }
+
+        .upload-category:hover {
+            border-color: var(--primary);
+            background: #f8f7ff;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .upload-category .category-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .upload-category h3 {
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .upload-category p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Wardrobe Grid Styles */
+        .wardrobe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .clothing-item {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .clothing-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .clothing-item .item-image-container {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        .clothing-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .clothing-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .clothing-item .item-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .clothing-item-info {
+            padding: 15px;
+        }
+
+        .clothing-item-info h4 {
+            margin-bottom: 5px;
+            color: var(--text);
+            font-size: 1em;
+        }
+
+        .clothing-item-info .item-details {
+            color: #666;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        .color-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .color-tag {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .wear-stats {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 0.95em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5f4dd0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn-secondary {
+            background: #edf2f7;
+            color: #2d3436;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+
+        /* Occasion Selector Styles */
+        .occasion-selector {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .occasion-btn {
+            padding: 12px 25px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 0.95em;
+        }
+
+        .occasion-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .occasion-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+
+        /* Outfit Result Styles */
+        .outfit-result {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .outfit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .outfit-item {
+            text-align: center;
+            background: #fafafa;
+            border-radius: var(--radius);
+            padding: 15px;
+            transition: var(--transition);
+        }
+
+        .outfit-item:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .outfit-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .outfit-item .outfit-item-label {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .outfit-item .outfit-item-name {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Spin Wheel Styles */
+        .spin-wheel-container {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .wheel {
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        .wheel-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, 
+                #ff6b6b 0deg 60deg, 
+                #4ecdc4 60deg 120deg, 
+                #45b7d1 120deg 180deg,
+                #96ceb4 180deg 240deg,
+                #ffeaa7 240deg 300deg,
+                #dda0dd 300deg 360deg);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid var(--danger);
+            z-index: 10;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.3));
+        }
+
+        /* Calendar Styles */
+        .calendar {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day-header {
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            background: #f8f9fa;
+        }
+
+        .calendar-day {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-day:hover {
+            background: #f8f7ff;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .calendar-day.has-outfit {
+            background: #e8f8f5;
+            border-color: var(--success);
+        }
+
+        .calendar-day.has-outfit:hover {
+            background: #d1f2eb;
+        }
+
+        .calendar-day.today {
+            border-color: var(--primary);
+            border-width: 2px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #636e72;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background: #f0f0f0;
+            color: #2d3436;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3436;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .color-option:hover {
+            transform: scale(1.15);
+        }
+
+        .color-option.selected {
+            border-color: #2d3436;
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2d3436;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+            z-index: 2000;
+            font-weight: 500;
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateX(100%); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateX(0); 
+                opacity: 1; 
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content { 
+                padding: 15px; 
+            }
+            
+            .header { 
+                padding: 15px; 
+            }
+            
+            .header h1 { 
+                font-size: 1.5em; 
+            }
+            
+            .nav-tab { 
+                padding: 10px 15px; 
+                font-size: 0.85em; 
+            }
+            
+            .outfit-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .wardrobe-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+            
+            .calendar-day {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .outfit-grid { 
+                grid-template-columns: 1fr; 
+            }
+            
+            .occasion-selector {
+                flex-direction: column;
+            }
+            
+            .occasion-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <span class="logo-icon">👗</span>
+                StyleMate
+            </h1>
+            <p class="header-subtitle">Your Personal AI Stylist</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('wardrobe')">
+                <span class="tab-icon">👚</span> Wardrobe
+            </button>
+            <button class="nav-tab" onclick="switchTab('outfit')">
+                <span class="tab-icon">🎨</span> Create Outfit
+            </button>
+            <button class="nav-tab" onclick="switchTab('spin')">
+                <span class="tab-icon">🎲</span> Spin the Wheel
+            </button>
+            <button class="nav-tab" onclick="switchTab('calendar')">
+                <span class="tab-icon">📅</span> Calendar
+            </button>
+            <button class="nav-tab" onclick="switchTab('shoes')">
+                <span class="tab-icon">👠</span> Shoes
+            </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Wardrobe Tab -->
+            <div id="wardrobe" class="tab-content active">
+                <h2>My Wardrobe</h2>
+                <div class="upload-section">
+                    <h3>Add New Items</h3>
+                    <p>Click on a category to upload your clothing items</p>
+                    <div class="upload-grid">
+                        <div class="upload-category" onclick="openUploadModal('top')">
+                            <span class="category-icon">👕</span>
+                            <h3>Shirts & Tops</h3>
+                            <p>Add shirts, blouses, t-shirts</p>
+                        </div>
+                        <div class="upload-category" onclick="openUploadModal('bottom')">
+                            <span class="category-icon">👖</span>
+                            <h3>Pants & Skirts</h3>
+                            <p>Add pants, jeans, skirts</p>
+                        </div>
+                        <div class="upload-category" onclick="openUploadModal('dress')">
+                            <span class="category-icon">👗</span>
+                            <h3>Dresses</h3>
+                            <p>Add dresses and jumpsuits</p>
+                        </div>
+                        <div class="upload-category" onclick="openUploadModal('outerwear')">
+                            <span class="category-icon">🧥</span>
+                            <h3>Outerwear</h3>
+                            <p>Add jackets, coats, cardigans</p>
+                        </div>
+                        <div class="upload-category" onclick="openUploadModal('shoes')">
+                            <span class="category-icon">👠</span>
+                            <h3>Shoes</h3>
+                            <p>Add shoes and boots</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Your Items</h3>
+                <div class="wardrobe-grid" id="wardrobeGrid">
+                    <!-- Clothing items will be displayed here -->
+                </div>
+            </div>
+
+            <!-- Outfit Creation Tab -->
+            <div id="outfit" class="tab-content">
+                <h2>Create Your Perfect Outfit</h2>
+                <p>Select an occasion and we'll create a thoughtful outfit for you</p>
+                
+                <div class="occasion-selector" id="occasionSelector">
+                    <button class="occasion-btn active" data-occasion="casual">😊 Casual</button>
+                    <button class="occasion-btn" data-occasion="work">💼 Work</button>
+                    <button class="occasion-btn" data-occasion="formal">🎩 Formal</button>
+                    <button class="occasion-btn" data-occasion="party">🎉 Party</button>
+                    <button class="occasion-btn" data-occasion="date">💕 Date Night</button>
+                    <button class="occasion-btn" data-occasion="wedding">💒 Wedding</button>
+                    <button class="occasion-btn" data-occasion="gym">💪 Gym</button>
+                    <button class="occasion-btn" data-occasion="travel">✈️ Travel</button>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <label for="seasonSelect" style="font-weight: 600; display: block; margin-bottom: 8px;">
+                        Select Season:
+                    </label>
+                    <select id="seasonSelect" style="padding: 12px; border-radius: 8px; border: 2px solid #e2e8f0; width: 100%; max-width: 200px;">
+                        <option value="spring">🌸 Spring</option>
+                        <option value="summer">☀️ Summer</option>
+                        <option value="fall">🍂 Fall</option>
+                        <option value="winter">❄️ Winter</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="generateOutfit()">
+                    ✨ Generate Outfit
+                </button>
+
+                <div id="outfitResult" class="outfit-result" style="display: none;">
+                    <h3>Your Perfect Outfit</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Colors are thoughtfully matched for a cohesive look</p>
+                    <div class="outfit-grid" id="outfitGrid"></div>
+                    <div style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" onclick="saveOutfit()">💾 Save Outfit</button>
+                        <button class="btn btn-secondary" onclick="generateOutfit()">🔄 Regenerate</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spin the Wheel Tab -->
+            <div id="spin" class="tab-content">
+                <div class="spin-wheel-container">
+                    <h2>Spin to Randomize Your Outfit</h2>
+                    <p>Let fate decide your style today! The wheel ensures color coordination.</p>
+                    
+                    <div class="wheel" id="spinWheel">
+                        <div class="wheel-pointer"></div>
+                        <div class="wheel-inner"></div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="spinWheel()" style="margin-top: 30px; font-size: 1.1em; padding: 15px 30px;">
+                        🎲 Spin the Wheel!
+                    </button>
+                    
+                    <div id="spinResult" class="outfit-result" style="display: none; margin-top: 30px;">
+                        <h3>Your Random Outfit</h3>
+                        <div class="outfit-grid" id="spinOutfitGrid"></div>
+                        <button class="btn btn-secondary" onclick="saveOutfit()" style="margin-top: 20px;">
+                            💾 Save This Outfit
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Tab -->
+            <div id="calendar" class="tab-content">
+                <h2>Outfit Calendar</h2>
+                <p>Track when you last wore each item to avoid over-wearing</p>
+                
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <button class="btn btn-secondary" onclick="changeMonth(-1)">← Previous</button>
+                        <h3 id="calendarMonth" style="margin: 0;"></h3>
+                        <button class="btn btn-secondary" onclick="changeMonth(1)">Next →</button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar days will be generated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shoes Tab -->
+            <div id="shoes" class="tab-content">
+                <h2>Shoe Collection</h2>
+                <p>Manage your shoes and get smart recommendations</p>
+                
+                <button class="btn btn-primary" onclick="openUploadModal('shoes')" style="margin-bottom: 20px;">
+                    ➕ Add Shoes
+                </button>
+                
+                <div class="wardrobe-grid" id="shoesGrid">
+                    <!-- Shoes will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Item</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="itemName">Item Name *</label>
+                    <input type="text" id="itemName" required placeholder="e.g., Blue Denim Jacket">
+                </div>
+                <div class="form-group">
+                    <label for="itemCategory">Category *</label>
+                    <select id="itemCategory" required>
+                        <option value="top">Shirt/Top</option>
+                        <option value="bottom">Pants/Skirt</option>
+                        <option value="dress">Dress</option>
+                        <option value="outerwear">Outerwear</option>
+                        <option value="shoes">Shoes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemImage">Upload Image *</label>
+                    <input type="file" id="itemImage" accept="image/*" required onchange="previewImage(this)">
+                    <img id="imagePreview" style="max-width: 100%; margin-top: 10px; border-radius: 8px; display: none;">
+                </div>
+                <div class="form-group">
+                    <label>Main Color *</label>
+                    <div class="color-picker" id="colorPicker">
+                        <div class="color-option selected" style="background: #000000;" data-color="black" title="Black"></div>
+                        <div class="color-option" style="background: #ffffff;" data-color="white" title="White"></div>
+                        <div class="color-option" style="background: #ff0000;" data-color="red" title="Red"></div>
+                        <div class="color-option" style="background: #0000ff;" data-color="blue" title="Blue"></div>
+                        <div class="color-option" style="background: #00ff00;" data-color="green" title="Green"></div>
+                        <div class="color-option" style="background: #ffff00;" data-color="yellow" title="Yellow"></div>
+                        <div class="color-option" style="background: #ffc0cb;" data-color="pink" title="Pink"></div>
+                        <div class="color-option" style="background: #800080;" data-color="purple" title="Purple"></div>
+                        <div class="color-option" style="background: #ffa500;" data-color="orange" title="Orange"></div>
+                        <div class="color-option" style="background: #a52a2a;" data-color="brown" title="Brown"></div>
+                        <div class="color-option" style="background: #808080;" data-color="gray" title="Gray"></div>
+                        <div class="color-option" style="background: #000080;" data-color="navy" title="Navy"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="itemStyle">Style</label>
+                    <select id="itemStyle">
+                        <option value="casual">Casual</option>
+                        <option value="formal">Formal</option>
+                        <option value="business">Business</option>
+                        <option value="party">Party</option>
+                        <option value="sporty">Sporty</option>
+                        <option value="elegant">Elegant</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemSeason">Seasons (hold Ctrl/Cmd to select multiple)</label>
+                    <select id="itemSeason" multiple style="height: 100px;">
+                        <option value="spring">Spring</option>
+                        <option value="summer">Summer</option>
+                        <option value="fall">Fall</option>
+                        <option value="winter">Winter</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    Add to Wardrobe
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data structures
+        let wardrobe = {
+            tops: [],
+            bottoms: [],
+            dresses: [],
+            outerwear: [],
+            shoes: []
+        };
+        
+        let outfitHistory = {};
+        let currentOutfit = null;
+        let selectedOccasion = 'casual';
+        let currentDate = new Date();
+        
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('stylemate_data');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    wardrobe = data.wardrobe || wardrobe;
+                    outfitHistory = data.outfitHistory || {};
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                }
+            }
+            updateWardrobeDisplay();
+            updateShoesDisplay();
+            updateCalendar();
+        }
+        
+        // Save data to localStorage
+        function saveData() {
+            try {
+                const data = {
+                    wardrobe: wardrobe,
+                    outfitHistory: outfitHistory
+                };
+                localStorage.setItem('stylemate_data', JSON.stringify(data));
+            } catch (e) {
+                console.error('Error saving data:', e);
+                showToast('Error saving data. Please try again.');
+            }
+        }
+        
+        // Switch tabs
+        function switchTab(tabName) {
+            // Remove active class from all tabs and contents
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            document.getElementById(tabName).classList.add('active');
+            event.target.closest('.nav-tab').classList.add('active');
+            
+            // Update calendar if switching to calendar tab
+            if (tabName === 'calendar') {
+                updateCalendar();
+            }
+        }
+        
+        // Modal functions
+        function openUploadModal(category) {
+            document.getElementById('uploadModal').style.display = 'flex';
+            document.getElementById('itemCategory').value = category;
+            const categoryNames = {
+                top: 'Shirt/Top',
+                bottom: 'Pants/Skirt',
+                dress: 'Dress',
+                outerwear: 'Outerwear',
+                shoes: 'Shoes'
+            };
+            document.getElementById('modalTitle').textContent = `Add ${categoryNames[category] || 'Item'}`;
+        }
+        
+        function closeModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+            document.getElementById('uploadForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            // Reset color selection
+            document.querySelectorAll('.color-option').forEach(o => {
+                o.classList.remove('selected');
+                if (o.dataset.color === 'black') o.classList.add('selected');
+            });
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('uploadModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        // Color selection
+        let selectedColor = 'black';
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedColor = this.dataset.color;
+            });
+        });
+        
+        // Upload form submission
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const itemName = document.getElementById('itemName').value.trim();
+            const category = document.getElementById('itemCategory').value;
+            const imageFile = document.getElementById('itemImage').files[0];
+            const style = document.getElementById('itemStyle').value;
+            const seasons = Array.from(document.getElementById('itemSeason').selectedOptions).map(opt => opt.value);
+            
+            // If no seasons selected, default to all seasons
+            const finalSeasons = seasons.length > 0 ? seasons : ['spring', 'summer', 'fall', 'winter'];
+            
+            if (!itemName || !imageFile) {
+                showToast('Please fill in all required fields');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                
+                const newItem = {
+                    id: Date.now(),
+                    name: itemName,
+                    category: category,
+                    image: imageUrl,
+                    color: selectedColor,
+                    style: style,
+                    seasons: finalSeasons,
+                    lastWorn: null,
+                    timesWorn: 0
+                };
+                
+                // Add to appropriate category
+                switch(category) {
+                    case 'top':
+                        wardrobe.tops.push(newItem);
+                        break;
+                    case 'bottom':
+                        wardrobe.bottoms.push(newItem);
+                        break;
+                    case 'dress':
+                        wardrobe.dresses.push(newItem);
+                        break;
+                    case 'outerwear':
+                        wardrobe.outerwear.push(newItem);
+                        break;
+                    case 'shoes':
+                        wardrobe.shoes.push(newItem);
+                        break;
+                }
+                
+                saveData();
+                updateWardrobeDisplay();
+                updateShoesDisplay();
+                closeModal();
+                showToast('Item added successfully! 🎉');
+            };
+            reader.readAsDataURL(imageFile);
+        });
+        
+        // Update wardrobe display
+        function updateWardrobeDisplay() {
+            const grid = document.getElementById('wardrobeGrid');
+            grid.innerHTML = '';
+            
+            const allItems = [
+                ...wardrobe.tops.map(item => ({...item, type: 'Top'})),
+                ...wardrobe.bottoms.map(item => ({...item, type: 'Bottom'})),
+                ...wardrobe.dresses.map(item => ({...item, type: 'Dress'})),
+                ...wardrobe.outerwear.map(item => ({...item, type: 'Outerwear'})),
+                ...wardrobe.shoes.map(item => ({...item, type: 'Shoes'}))
+            ];
+            
+            if (allItems.length === 0) {
+                grid.innerHTML = `
+                    <div style="text-align: center; grid-column: 1/-1; padding: 60px 20px; color: #666;">
+                        <div style="font-size: 4em; margin-bottom: 20px;">👔</div>
+                        <h3>Your wardrobe is empty</h3>
+                        <p>Add some items to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            allItems.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'clothing-item';
+                itemCard.innerHTML = `
+                    <div class="item-image-container">
+                        <img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-size=%2220%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+                        <span class="item-badge">${item.type}</span>
+                    </div>
+                    <div class="clothing-item-info">
+                        <h4>${item.name}</h4>
+                        <p class="item-details">${item.style.charAt(0).toUpperCase() + item.style.slice(1)} Style</p>
+                        <div class="color-tags">
+                            <div class="color-tag" style="background: ${item.color};" title="Color: ${item.color}"></div>
+                        </div>
+                        <div class="wear-stats">
+                            <span>👕 Worn: ${item.timesWorn} times</span>
+                            ${item.lastWorn ? `<br><span>📅 Last worn: ${new Date(item.lastWorn).toLocaleDateString()}</span>` : '<br><span>📅 Never worn</span>'}
+                        </div>
+                        <button class="btn btn-danger btn-sm" onclick="deleteItem('${item.category}', ${item.id})" style="margin-top: 10px; width: 100%;">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(itemCard);
+            });
+        }
+        
+        // Update shoes display
+        function updateShoesDisplay() {
+            const grid = document.getElementById('shoesGrid');
+            grid.innerHTML = '';
+            
+            if (wardrobe.shoes.length === 0) {
+                grid.innerHTML = `
+                    <div style="text-align: center; grid-column: 1/-1; padding: 60px 20px; color: #666;">
+                        <div style="font-size: 4em; margin-bottom: 20px;">👠</div>
+                        <h3>No shoes added yet</h3>
+                        <p>Add your first pair of shoes!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            wardrobe.shoes.forEach(shoe => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'clothing-item';
+                itemCard.innerHTML = `
+                    <div class="item-image-container">
+                        <img src="${shoe.image}" alt="${shoe.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-size=%2220%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="clothing-item-info">
+                        <h4>${shoe.name}</h4>
+                        <p class="item-details">${shoe.style.charAt(0).toUpperCase() + shoe.style.slice(1)} Style</p>
+                        <div class="color-tags">
+                            <div class="color-tag" style="background: ${shoe.color};" title="Color: ${shoe.color}"></div>
+                        </div>
+                        <div class="wear-stats">
+                            <span>👟 Worn: ${shoe.timesWorn} times</span>
+                            ${shoe.lastWorn ? `<br><span>📅 Last worn: ${new Date(shoe.lastWorn).toLocaleDateString()}</span>` : '<br><span>📅 Never worn</span>'}
+                        </div>
+                        <button class="btn btn-danger btn-sm" onclick="deleteItem('shoes', ${shoe.id})" style="margin-top: 10px; width: 100%;">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(itemCard);
+            });
+        }
+        
+        // Delete item
+        function deleteItem(category, id) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                switch(category) {
+                    case 'top':
+                        wardrobe.tops = wardrobe.tops.filter(item => item.id !== id);
+                        break;
+                    case 'bottom':
+                        wardrobe.bottoms = wardrobe.bottoms.filter(item => item.id !== id);
+                        break;
+                    case 'dress':
+                        wardrobe.dresses = wardrobe.dresses.filter(item => item.id !== id);
+                        break;
+                    case 'outerwear':
+                        wardrobe.outerwear = wardrobe.outerwear.filter(item => item.id !== id);
+                        break;
+                    case 'shoes':
+                        wardrobe.shoes = wardrobe.shoes.filter(item => item.id !== id);
+                        break;
+                }
+                saveData();
+                updateWardrobeDisplay();
+                updateShoesDisplay();
+                showToast('Item deleted successfully');
+            }
+        }
+        
+        // Occasion selection
+        document.querySelectorAll('.occasion-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.occasion-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedOccasion = this.dataset.occasion;
+            });
+        });
+        
+        // Generate outfit
+        function generateOutfit() {
+            const season = document.getElementById('seasonSelect').value;
+            const outfit = createThoughtfulOutfit(selectedOccasion, season);
+            
+            if (!outfit) {
+                showToast('Not enough items in wardrobe for this occasion. Please add more items.');
+                return;
+            }
+            
+            currentOutfit = outfit;
+            displayOutfit(outfit, 'outfitGrid');
+            document.getElementById('outfitResult').style.display = 'block';
+            
+            // Scroll to result
+            document.getElementById('outfitResult').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Create thoughtful outfit based on color theory and occasion
+        function createThoughtfulOutfit(occasion, season) {
+            const outfit = {
+                top: null,
+                bottom: null,
+                dress: null,
+                outerwear: null,
+                shoes: null
+            };
+            
+            // Filter items by season and occasion
+            const getSeasonalItems = (items) => {
+                return items.filter(item => 
+                    item.seasons.includes(season) || item.seasons.length === 0
+                );
+            };
+            
+            // Style mapping based on occasion
+            const styleMap = {
+                casual: 'casual',
+                work: 'business',
+                formal: 'formal',
+                party: 'party',
+                date: 'elegant',
+                wedding: 'elegant',
+                gym: 'sporty',
+                travel: 'casual'
+            };
+            
+            const targetStyle = styleMap[occasion] || 'casual';
+            
+            // Select items
+            if (occasion === 'wedding' || occasion === 'formal') {
+                // Prefer dresses for formal occasions
+                const availableDresses = getSeasonalItems(wardrobe.dresses).filter(d => 
+                    d.style === targetStyle || d.style === 'elegant' || d.style === 'formal'
+                );
+                if (availableDresses.length > 0) {
+                    outfit.dress = availableDresses[Math.floor(Math.random() * availableDresses.length)];
+                }
+            }
+            
+            if (!outfit.dress) {
+                // Select top
+                const availableTops = getSeasonalItems(wardrobe.tops).filter(t => 
+                    t.style === targetStyle || t.style === 'casual'
+                );
+                if (availableTops.length > 0) {
+                    outfit.top = availableTops[Math.floor(Math.random() * availableTops.length)];
+                }
+                
+                // Select bottom
+                const availableBottoms = getSeasonalItems(wardrobe.bottoms).filter(b => 
+                    b.style === targetStyle || b.style === 'casual'
+                );
+                if (availableBottoms.length > 0 && outfit.top) {
+                    // Color matching for top and bottom
+                    const compatibleBottoms = availableBottoms.filter(b => 
+                        areColorsCompatible(outfit.top.color, b.color)
+                    );
+                    if (compatibleBottoms.length > 0) {
+                        outfit.bottom = compatibleBottoms[Math.floor(Math.random() * compatibleBottoms.length)];
+                    } else {
+                        outfit.bottom = availableBottoms[Math.floor(Math.random() * availableBottoms.length)];
+                    }
+                }
+            }
+            
+            // Select outerwear for cold seasons
+            if (season === 'winter' || season === 'fall') {
+                const availableOuterwear = getSeasonalItems(wardrobe.outerwear);
+                if (availableOuterwear.length > 0) {
+                    const compatibleOuterwear = availableOuterwear.filter(o => {
+                        const baseColor = outfit.dress ? outfit.dress.color : outfit.top ? outfit.top.color : null;
+                        return baseColor ? areColorsCompatible(baseColor, o.color) : true;
+                    });
+                    if (compatibleOuterwear.length > 0) {
+                        outfit.outerwear = compatibleOuterwear[Math.floor(Math.random() * compatibleOuterwear.length)];
+                    } else if (availableOuterwear.length > 0) {
+                        outfit.outerwear = availableOuterwear[Math.floor(Math.random() * availableOuterwear.length)];
+                    }
+                }
+            }
+            
+            // Select shoes
+            const availableShoes = getSeasonalItems(wardrobe.shoes).filter(s => 
+                s.style === targetStyle || s.style === 'casual'
+            );
+            if (availableShoes.length > 0) {
+                const baseColor = outfit.dress ? outfit.dress.color : outfit.bottom ? outfit.bottom.color : outfit.top ? outfit.top.color : null;
+                if (baseColor) {
+                    const compatibleShoes = availableShoes.filter(s => areColorsCompatible(baseColor, s.color));
+                    if (compatibleShoes.length > 0) {
+                        outfit.shoes = compatibleShoes[Math.floor(Math.random() * compatibleShoes.length)];
+                    } else {
+                        outfit.shoes = availableShoes[Math.floor(Math.random() * availableShoes.length)];
+                    }
+                } else {
+                    outfit.shoes = availableShoes[Math.floor(Math.random() * availableShoes.length)];
+                }
+            }
+            
+            // Check if we have at least one item
+            if (!outfit.top && !outfit.dress && !outfit.bottom && !outfit.shoes) {
+                return null;
+            }
+            
+            return outfit;
+        }
+        
+        // Color compatibility checker
+        function areColorsCompatible(color1, color2) {
+            const colorPairs = {
+                'black': ['white', 'red', 'pink', 'gray', 'blue', 'green', 'yellow', 'purple', 'orange', 'brown', 'navy'],
+                'white': ['black', 'red', 'blue', 'green', 'pink', 'purple', 'navy', 'gray', 'brown', 'orange'],
+                'red': ['black', 'white', 'gray', 'navy', 'brown'],
+                'blue': ['white', 'black', 'gray', 'brown', 'yellow', 'orange'],
+                'green': ['black', 'white', 'brown', 'gray', 'navy', 'yellow'],
+                'yellow': ['black', 'blue', 'gray', 'navy', 'purple'],
+                'pink': ['black', 'white', 'gray', 'navy', 'purple'],
+                'purple': ['black', 'white', 'gray', 'pink', 'yellow'],
+                'orange': ['black', 'white', 'blue', 'brown', 'navy'],
+                'brown': ['white', 'black', 'blue', 'green', 'orange', 'gray'],
+                'gray': ['black', 'white', 'red', 'blue', 'pink', 'purple', 'brown', 'navy'],
+                'navy': ['white', 'red', 'gray', 'pink', 'yellow', 'green', 'orange', 'brown']
+            };
+            
+            if (color1 === color2) return true;
+            return colorPairs[color1]?.includes(color2) || colorPairs[color2]?.includes(color1) || false;
+        }
+        
+        // Display outfit
+        function displayOutfit(outfit, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            const items = [
+                { item: outfit.outerwear, label: 'Outerwear' },
+                { item: outfit.top, label: 'Top' },
+                { item: outfit.dress, label: 'Dress' },
+                { item: outfit.bottom, label: 'Bottom' },
+                { item: outfit.shoes, label: 'Shoes' }
+            ];
+            
+            let hasItems = false;
+            
+            items.forEach(({item, label}) => {
+                if (item) {
+                    hasItems = true;
+                    const div = document.createElement('div');
+                    div.className = 'outfit-item';
+                    div.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22180%22 height=%22180%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22180%22 height=%22180%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22 font-size=%2218%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+                        <div class="outfit-item-label">${label}</div>
+                        <div class="outfit-item-name">${item.name}</div>
+                    `;
+                    container.appendChild(div);
+                }
+            });
+            
+            if (!hasItems) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 20px;">No items could be selected for this occasion.</p>';
+            }
+        }
+        
+        // Save outfit and update history
+        function saveOutfit() {
+            if (!currentOutfit) {
+                showToast('No outfit to save');
+                return;
+            }
+            
+            const dateKey = new Date().toISOString().split('T')[0];
+            
+            // Update last worn for items
+            const itemsToUpdate = [
+                currentOutfit.top,
+                currentOutfit.bottom,
+                currentOutfit.dress,
+                currentOutfit.outerwear,
+                currentOutfit.shoes
+            ].filter(item => item);
+            
+            itemsToUpdate.forEach(item => {
+                item.lastWorn = dateKey;
+                item.timesWorn = (item.timesWorn || 0) + 1;
+            });
+            
+            // Save to history
+            if (!outfitHistory[dateKey]) {
+                outfitHistory[dateKey] = [];
+            }
+            outfitHistory[dateKey].push({
+                outfit: currentOutfit,
+                occasion: selectedOccasion,
+                timestamp: new Date().toISOString()
+            });
+            
+            saveData();
+            updateWardrobeDisplay();
+            updateShoesDisplay();
+            updateCalendar();
+            showToast('Outfit saved and wardrobe updated! 📅');
+        }
+        
+        // Spin the wheel
+        function spinWheel() {
+            const wheel = document.getElementById('spinWheel');
+            const rotations = 5 + Math.random() * 5; // 5-10 full rotations
+            const degrees = rotations * 360;
+            
+            wheel.style.transform = `rotate(${degrees}deg)`;
+            
+            setTimeout(() => {
+                const randomOutfit = createRandomOutfit();
+                if (randomOutfit) {
+                    currentOutfit = randomOutfit;
+                    displayOutfit(randomOutfit, 'spinOutfitGrid');
+                    document.getElementById('spinResult').style.display = 'block';
+                    showToast('Spin complete! Check out your outfit! 🎉');
+                    
+                    // Scroll to result
+                    document.getElementById('spinResult').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    showToast('Not enough items in wardrobe for random outfit');
+                }
+                
+                // Reset wheel after animation
+                setTimeout(() => {
+                    wheel.style.transform = 'rotate(0deg)';
+                }, 500);
+            }, 3000);
+        }
+        
+        // Create random outfit (but still with color matching)
+        function createRandomOutfit() {
+            const allTops = [...wardrobe.tops, ...wardrobe.dresses];
+            const allBottoms = wardrobe.bottoms;
+            const allShoes = wardrobe.shoes;
+            
+            if (allTops.length === 0 && allBottoms.length === 0) {
+                return null;
+            }
+            
+            const outfit = {
+                top: null,
+                bottom: null,
+                dress: null,
+                outerwear: null,
+                shoes: null
+            };
+            
+            // Randomly decide if dress or top+bottom
+            if (allTops.length > 0 && Math.random() > 0.5) {
+                const randomTop = allTops[Math.floor(Math.random() * allTops.length)];
+                if (randomTop.category === 'dress') {
+                    outfit.dress = randomTop;
+                } else {
+                    outfit.top = randomTop;
+                    
+                    if (allBottoms.length > 0) {
+                        const compatibleBottoms = allBottoms.filter(b => 
+                            areColorsCompatible(outfit.top.color, b.color)
+                        );
+                        const bottomPool = compatibleBottoms.length > 0 ? compatibleBottoms : allBottoms;
+                        outfit.bottom = bottomPool[Math.floor(Math.random() * bottomPool.length)];
+                    }
+                }
+            } else if (allBottoms.length > 0) {
+                outfit.bottom = allBottoms[Math.floor(Math.random() * allBottoms.length)];
+                
+                if (allTops.length > 0) {
+                    const compatibleTops = allTops.filter(t => 
+                        t.category !== 'dress' && areColorsCompatible(t.color, outfit.bottom.color)
+                    );
+                    const topPool = compatibleTops.length > 0 ? compatibleTops : allTops.filter(t => t.category !== 'dress');
+                    if (topPool.length > 0) {
+                        outfit.top = topPool[Math.floor(Math.random() * topPool.length)];
+                    }
+                }
+            }
+            
+            // Add outerwear randomly for variety
+            if (wardrobe.outerwear.length > 0 && Math.random() > 0.7) {
+                const baseColor = outfit.dress ? outfit.dress.color : outfit.top ? outfit.top.color : null;
+                if (baseColor) {
+                    const compatibleOuterwear = wardrobe.outerwear.filter(o => 
+                        areColorsCompatible(baseColor, o.color)
+                    );
+                    const outerPool = compatibleOuterwear.length > 0 ? compatibleOuterwear : wardrobe.outerwear;
+                    outfit.outerwear = outerPool[Math.floor(Math.random() * outerPool.length)];
+                } else {
+                    outfit.outerwear = wardrobe.outerwear[Math.floor(Math.random() * wardrobe.outerwear.length)];
+                }
+            }
+            
+            // Add shoes
+            if (allShoes.length > 0) {
+                const baseColor = outfit.dress ? outfit.dress.color : 
+                                 outfit.bottom ? outfit.bottom.color : 
+                                 outfit.top ? outfit.top.color : null;
+                
+                if (baseColor) {
+                    const compatibleShoes = allShoes.filter(s => areColorsCompatible(baseColor, s.color));
+                    const shoePool = compatibleShoes.length > 0 ? compatibleShoes : allShoes;
+                    outfit.shoes = shoePool[Math.floor(Math.random() * shoePool.length)];
+                } else {
+                    outfit.shoes = allShoes[Math.floor(Math.random() * allShoes.length)];
+                }
+            }
+            
+            return outfit;
+        }
+        
+        // Calendar functions
+        function updateCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const calendarMonth = document.getElementById('calendarMonth');
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            calendarMonth.textContent = new Date(year, month).toLocaleDateString('en-US', {
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            // Get first day of month
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            calendarGrid.innerHTML = '';
+            
+            // Add day headers
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            days.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                calendarGrid.appendChild(header);
+            });
+            
+            // Add empty cells for days before first day
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                calendarGrid.appendChild(empty);
+            }
+            
+            // Add days
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day';
+                
+                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                if (outfitHistory[dateKey]) {
+                    dayCell.classList.add('has-outfit');
+                    dayCell.title = `${outfitHistory[dateKey].length} outfit(s) worn`;
+                }
+                
+                // Check if it's today
+                if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === day) {
+                    dayCell.classList.add('today');
+                }
+                
+                dayCell.innerHTML = `
+                    <strong>${day}</strong>
+                    ${outfitHistory[dateKey] ? '<span style="font-size: 0.9em;">👗</span>' : ''}
+                `;
+                
+                dayCell.addEventListener('click', () => showDayOutfits(dateKey));
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+        
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            updateCalendar();
+        }
+        
+        function showDayOutfits(dateKey) {
+            const outfits = outfitHistory[dateKey];
+            if (outfits && outfits.length > 0) {
+                let message = `Outfits worn on ${dateKey}:\n\n`;
+                outfits.forEach((entry, index) => {
+                    message += `Outfit ${index + 1} (${entry.occasion}):\n`;
+                    const items = [
+                        entry.outfit.outerwear,
+                        entry.outfit.top,
+                        entry.outfit.dress,
+                        entry.outfit.bottom,
+                        entry.outfit.shoes
+                    ].filter(item => item);
+                    
+                    items.forEach(item => {
+                        message += `• ${item.name} (${item.color})\n`;
+                    });
+                    message += '\n';
+                });
+                alert(message);
+            } else {
+                showToast('No outfits recorded for this day');
+            }
+        }
+        
+        // Toast notification
+        function showToast(message) {
+            // Remove existing toasts
+            const existingToasts = document.querySelectorAll('.toast');
+            existingToasts.forEach(toast => toast.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Add slideOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Keyboard shortcut to close modal with Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        // Initialize app
+        loadData();
+        updateCalendar();
+        
+        console.log('StyleMate app loaded successfully!');
+        console.log('Your personal AI stylist is ready to help you look your best.');
+    </script>
+</body>
+</html>
